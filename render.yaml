@@ -1,0 +1,25 @@
+# Hospedagem gratuita no Render (https://render.com) — "New → Blueprint" apontando para este repositório.
+# Banco: Turso (https://turso.tech), plano gratuito. Preencha DATABASE_URL e DATABASE_AUTH_TOKEN no painel.
+# Plano gratuito: o servidor "dorme" após 15 min sem uso; o 1º acesso depois disso leva ~30–60 s.
+services:
+  - type: web
+    name: escola-plus
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: APP_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false   # libsql://<banco>-<usuario>.turso.io
+      - key: DATABASE_AUTH_TOKEN
+        sync: false   # turso db tokens create <banco>
+      - key: SCHOOL_TZ
+        value: America/Sao_Paulo

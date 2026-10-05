@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Escola+</string>
+    <string name="title_activity_main">Escola+</string>
+    <string name="package_name">br.escolamais.app</string>
+    <string name="custom_url_scheme">br.escolamais.app</string>
+</resources>

@@ -1,0 +1,1132 @@
+{
+  "tables": {
+    "school_classes": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "name": {
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "school_year": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "name",
+          "school_year"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "sqlite_autoindex_school_classes_1",
+          "columns": [
+            "name",
+            "school_year"
+          ]
+        }
+      ]
+    },
+    "subjects": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "name": {
+          "type": "VARCHAR(60)",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "color_hex": {
+          "type": "VARCHAR(7)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "'#4F46E5'"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "english_level": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "exam_group": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "exam_weekday": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "name"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "sqlite_autoindex_subjects_1",
+          "columns": [
+            "name"
+          ]
+        }
+      ]
+    },
+    "teaching_assignments": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "teacher_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "class_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "school_classes.id"
+        },
+        "subject_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "subjects.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "teacher_id",
+          "class_id",
+          "subject_id"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "sqlite_autoindex_teaching_assignments_1",
+          "columns": [
+            "teacher_id",
+            "class_id",
+            "subject_id"
+          ]
+        }
+      ]
+    },
+    "grades": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "student_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "class_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "school_classes.id"
+        },
+        "subject_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "subjects.id"
+        },
+        "bimester": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "component": {
+          "type": "VARCHAR(10)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "score": {
+          "type": "DECIMAL(4,2)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "graded_by": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "student_id",
+          "class_id",
+          "subject_id",
+          "bimester",
+          "component"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_grades_sheet",
+          "columns": [
+            "class_id",
+            "subject_id",
+            "bimester"
+          ]
+        },
+        {
+          "name": "sqlite_autoindex_grades_1",
+          "columns": [
+            "student_id",
+            "class_id",
+            "subject_id",
+            "bimester",
+            "component"
+          ]
+        }
+      ]
+    },
+    "announcements": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "title": {
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "body": {
+          "type": "TEXT",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "category": {
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "'general'"
+        },
+        "class_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "school_classes.id"
+        },
+        "is_pinned": {
+          "type": "BOOLEAN",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "false"
+        },
+        "author_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_announcements_class_created",
+          "columns": [
+            "class_id",
+            "created_at"
+          ]
+        }
+      ]
+    },
+    "announcement_reads": {
+      "columns": {
+        "user_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "announcement_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "announcements.id"
+        },
+        "read_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "user_id",
+        "announcement_id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": []
+    },
+    "homework": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "title": {
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "description": {
+          "type": "TEXT",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "class_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "school_classes.id"
+        },
+        "subject_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "subjects.id"
+        },
+        "due_date": {
+          "type": "DATE",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "author_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_homework_class_due",
+          "columns": [
+            "class_id",
+            "due_date"
+          ]
+        }
+      ]
+    },
+    "homework_completions": {
+      "columns": {
+        "student_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "homework_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "homework.id"
+        },
+        "completed_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "student_id",
+        "homework_id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": []
+    },
+    "calendar_events": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "title": {
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "description": {
+          "type": "TEXT",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "event_type": {
+          "type": "VARCHAR(20)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "'event'"
+        },
+        "starts_on": {
+          "type": "DATE",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "ends_on": {
+          "type": "DATE",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "class_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "school_classes.id"
+        },
+        "subject_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "subjects.id"
+        },
+        "author_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "bimester": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "exam_number": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "source": {
+          "type": "VARCHAR(6)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "'manual'"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_calendar_auto",
+          "columns": [
+            "source",
+            "bimester"
+          ]
+        },
+        {
+          "name": "idx_calendar_starts_class",
+          "columns": [
+            "starts_on",
+            "class_id"
+          ]
+        }
+      ]
+    },
+    "study_routines": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "student_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "weekday": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "start_time": {
+          "type": "VARCHAR(5)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "end_time": {
+          "type": "VARCHAR(5)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "subject_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "subjects.id"
+        },
+        "activity": {
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_routines_student_slot",
+          "columns": [
+            "student_id",
+            "weekday",
+            "start_time"
+          ]
+        }
+      ]
+    },
+    "study_routine_checks": {
+      "columns": {
+        "routine_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "study_routines.id"
+        },
+        "done_on": {
+          "type": "DATE",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        }
+      },
+      "primary_key": [
+        "routine_id",
+        "done_on"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": []
+    },
+    "audit_log": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "actor_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "action": {
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "entity": {
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "entity_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "details": {
+          "type": "TEXT",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_audit_created",
+          "columns": [
+            "created_at"
+          ]
+        }
+      ]
+    },
+    "users": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "username": {
+          "type": "VARCHAR(30)",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "password_hash": {
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "full_name": {
+          "type": "VARCHAR(100)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "role": {
+          "type": "VARCHAR(12)",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "class_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "school_classes.id"
+        },
+        "english_level": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "security_question": {
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "security_answer_hash": {
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "failed_login_count": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "0"
+        },
+        "failed_reset_count": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "0"
+        },
+        "locked_until": {
+          "type": "TIMESTAMP",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "must_change_password": {
+          "type": "BOOLEAN",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "false"
+        },
+        "token_version": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "0"
+        },
+        "is_active": {
+          "type": "BOOLEAN",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "true"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "role"
+        ],
+        [
+          "username"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "ux_users_single_admin",
+          "columns": [
+            "role"
+          ]
+        },
+        {
+          "name": "idx_users_class_role_name",
+          "columns": [
+            "class_id",
+            "role",
+            "full_name"
+          ]
+        },
+        {
+          "name": "sqlite_autoindex_users_1",
+          "columns": [
+            "username"
+          ]
+        }
+      ]
+    },
+    "access_keys": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "key_hash": {
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "key_hint": {
+          "type": "VARCHAR(12)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "role": {
+          "type": "VARCHAR(12)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "max_uses": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "1"
+        },
+        "use_count": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "0"
+        },
+        "expires_at": {
+          "type": "TIMESTAMP",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "revoked_at": {
+          "type": "TIMESTAMP",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "label": {
+          "type": "VARCHAR(80)",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "created_by": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "key_hash"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "sqlite_autoindex_access_keys_1",
+          "columns": [
+            "key_hash"
+          ]
+        }
+      ]
+    },
+    "exam_schedules": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "school_year": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "bimester": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "first_tuesday": {
+          "type": "DATE",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "starting_group": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "1"
+        },
+        "updated_by": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [
+        [
+          "school_year",
+          "bimester"
+        ]
+      ],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "sqlite_autoindex_exam_schedules_1",
+          "columns": [
+            "school_year",
+            "bimester"
+          ]
+        }
+      ]
+    },
+    "study_contents": {
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": true,
+          "cardinality_estimate": 500
+        },
+        "subject_id": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "subjects.id"
+        },
+        "bimester": {
+          "type": "INTEGER",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "exam_number": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "title": {
+          "type": "VARCHAR(120)",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "body": {
+          "type": "TEXT",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500
+        },
+        "author_id": {
+          "type": "INTEGER",
+          "nullable": true,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "foreign_key": "users.id"
+        },
+        "created_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "type": "TIMESTAMP",
+          "nullable": false,
+          "unique": false,
+          "cardinality_estimate": 500,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "primary_key": [
+        "id"
+      ],
+      "unique_constraints": [],
+      "check_constraints": {},
+      "indexes": [
+        {
+          "name": "idx_contents_bimester_subject",
+          "columns": [
+            "bimester",
+            "subject_id",
+            "exam_number"
+          ]
+        }
+      ]
+    }
+  }
+}

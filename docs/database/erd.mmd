@@ -1,0 +1,152 @@
+erDiagram
+    SCHOOL_CLASSES {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(40) name "NOT NULL"
+        INTEGER school_year "NOT NULL"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    SUBJECTS {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(60) name "NOT NULL UNIQUE"
+        VARCHAR(7) color_hex "NOT NULL"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    USERS {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(30) username "NOT NULL UNIQUE"
+        VARCHAR(200) password_hash "NOT NULL"
+        VARCHAR(100) full_name "NOT NULL"
+        VARCHAR(10) role "NOT NULL"
+        INTEGER class_id "FK"
+        VARCHAR(120) security_question "NOT NULL"
+        VARCHAR(200) security_answer_hash "NOT NULL"
+        INTEGER failed_login_count "NOT NULL"
+        INTEGER failed_reset_count "NOT NULL"
+        TIMESTAMP locked_until
+        BOOLEAN must_change_password "NOT NULL"
+        INTEGER token_version "NOT NULL"
+        BOOLEAN is_active "NOT NULL"
+        TIMESTAMP created_at "NOT NULL"
+        TIMESTAMP updated_at "NOT NULL"
+    }
+    ACCESS_KEYS {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(64) key_hash "NOT NULL UNIQUE"
+        VARCHAR(12) key_hint "NOT NULL"
+        VARCHAR(10) role "NOT NULL"
+        INTEGER max_uses "NOT NULL"
+        INTEGER use_count "NOT NULL"
+        TIMESTAMP expires_at
+        TIMESTAMP revoked_at
+        VARCHAR(80) label
+        INTEGER created_by "FK"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    TEACHING_ASSIGNMENTS {
+        INTEGER id "PK NOT NULL UNIQUE"
+        INTEGER teacher_id "FK NOT NULL"
+        INTEGER class_id "FK NOT NULL"
+        INTEGER subject_id "FK NOT NULL"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    GRADES {
+        INTEGER id "PK NOT NULL UNIQUE"
+        INTEGER student_id "FK NOT NULL"
+        INTEGER class_id "FK NOT NULL"
+        INTEGER subject_id "FK NOT NULL"
+        INTEGER bimester "NOT NULL"
+        INTEGER exam_number "NOT NULL"
+        DECIMAL(4,2) score "NOT NULL"
+        INTEGER graded_by "FK"
+        TIMESTAMP created_at "NOT NULL"
+        TIMESTAMP updated_at "NOT NULL"
+    }
+    ANNOUNCEMENTS {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(120) title "NOT NULL"
+        TEXT body "NOT NULL"
+        VARCHAR(20) category "NOT NULL"
+        INTEGER class_id "FK"
+        BOOLEAN is_pinned "NOT NULL"
+        INTEGER author_id "FK"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    ANNOUNCEMENT_READS {
+        INTEGER user_id "PK FK NOT NULL"
+        INTEGER announcement_id "PK FK NOT NULL"
+        TIMESTAMP read_at "NOT NULL"
+    }
+    HOMEWORK {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(120) title "NOT NULL"
+        TEXT description
+        INTEGER class_id "FK NOT NULL"
+        INTEGER subject_id "FK NOT NULL"
+        DATE due_date "NOT NULL"
+        INTEGER author_id "FK"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    HOMEWORK_COMPLETIONS {
+        INTEGER student_id "PK FK NOT NULL"
+        INTEGER homework_id "PK FK NOT NULL"
+        TIMESTAMP completed_at "NOT NULL"
+    }
+    CALENDAR_EVENTS {
+        INTEGER id "PK NOT NULL UNIQUE"
+        VARCHAR(120) title "NOT NULL"
+        TEXT description
+        VARCHAR(20) event_type "NOT NULL"
+        DATE starts_on "NOT NULL"
+        DATE ends_on
+        INTEGER class_id "FK"
+        INTEGER subject_id "FK"
+        INTEGER author_id "FK"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    STUDY_ROUTINES {
+        INTEGER id "PK NOT NULL UNIQUE"
+        INTEGER student_id "FK NOT NULL"
+        INTEGER weekday "NOT NULL"
+        VARCHAR(5) start_time "NOT NULL"
+        VARCHAR(5) end_time "NOT NULL"
+        INTEGER subject_id "FK"
+        VARCHAR(120) activity "NOT NULL"
+        TIMESTAMP created_at "NOT NULL"
+    }
+    STUDY_ROUTINE_CHECKS {
+        INTEGER routine_id "PK FK NOT NULL"
+        DATE done_on "PK NOT NULL"
+    }
+    AUDIT_LOG {
+        INTEGER id "PK NOT NULL UNIQUE"
+        INTEGER actor_id "FK"
+        VARCHAR(40) action "NOT NULL"
+        VARCHAR(40) entity "NOT NULL"
+        INTEGER entity_id
+        TEXT details
+        TIMESTAMP created_at "NOT NULL"
+    }
+    ANNOUNCEMENTS ||--o{ ANNOUNCEMENT_READS : has
+    HOMEWORK ||--o{ HOMEWORK_COMPLETIONS : has
+    SCHOOL_CLASSES ||--o{ ANNOUNCEMENTS : has
+    SCHOOL_CLASSES ||--o{ CALENDAR_EVENTS : has
+    SCHOOL_CLASSES ||--o{ GRADES : has
+    SCHOOL_CLASSES ||--o{ HOMEWORK : has
+    SCHOOL_CLASSES ||--o{ TEACHING_ASSIGNMENTS : has
+    SCHOOL_CLASSES ||--o{ USERS : has
+    STUDY_ROUTINES ||--o{ STUDY_ROUTINE_CHECKS : has
+    SUBJECTS ||--o{ CALENDAR_EVENTS : has
+    SUBJECTS ||--o{ GRADES : has
+    SUBJECTS ||--o{ HOMEWORK : has
+    SUBJECTS ||--o{ STUDY_ROUTINES : has
+    SUBJECTS ||--o{ TEACHING_ASSIGNMENTS : has
+    USERS ||--o{ ACCESS_KEYS : has
+    USERS ||--o{ ANNOUNCEMENTS : has
+    USERS ||--o{ ANNOUNCEMENT_READS : has
+    USERS ||--o{ AUDIT_LOG : has
+    USERS ||--o{ CALENDAR_EVENTS : has
+    USERS ||--o{ GRADES : has
+    USERS ||--o{ HOMEWORK : has
+    USERS ||--o{ HOMEWORK_COMPLETIONS : has
+    USERS ||--o{ STUDY_ROUTINES : has
+    USERS ||--o{ TEACHING_ASSIGNMENTS : has

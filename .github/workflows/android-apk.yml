@@ -1,0 +1,96 @@
+# Gera o APK do Escola+ a cada versão (tag v*) ou manualmente (aba Actions → "APK Android" → Run workflow).
+# Configure em Settings → Secrets and variables → Actions:
+#   ESCOLA_SERVER_URL      (variável ou segredo) endereço HTTPS do servidor, ex.: https://escola.onrender.com
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+#                          (opcionais) para gerar também o APK de release assinado
+name: APK Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      server_url:
+        description: 'Endereço HTTPS do servidor (vazio = usa a variável ESCOLA_SERVER_URL)'
+        required: false
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+
+  apk:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      ESCOLA_SERVER_URL: ${{ inputs.server_url || vars.ESCOLA_SERVER_URL || secrets.ESCOLA_SERVER_URL }}
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - uses: android-actions/setup-android@v3
+
+      - name: Conferir endereço do servidor
+        run: |
+          if [ -z "$ESCOLA_SERVER_URL" ]; then echo "::error::Defina ESCOLA_SERVER_URL (variável do repositório) ou informe server_url."; exit 1; fi
+          case "$ESCOLA_SERVER_URL" in https://*) ;; *) echo "::error::O endereço precisa ser HTTPS."; exit 1;; esac
+
+      - run: npm ci
+      - run: npm run build -w web
+      - name: Sincronizar app web → projeto Android
+        working-directory: web
+        run: npx cap sync android
+
+      - name: Versão do app (a partir da tag ou do número da execução)
+        working-directory: web/android
+        run: |
+          VERSION_NAME="${GITHUB_REF_NAME#v}"; [[ "$GITHUB_REF_TYPE" == "tag" ]] || VERSION_NAME="0.1.${GITHUB_RUN_NUMBER}"
+          sed -i "s/versionCode .*/versionCode ${GITHUB_RUN_NUMBER}/; s/versionName .*/versionName \"${VERSION_NAME}\"/" app/build.gradle
+
+      - name: Gerar APK de teste (debug)
+        working-directory: web/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Gerar APK assinado (release)
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        working-directory: web/android
+        run: |
+          echo "$KEYSTORE" | base64 -d > release.keystore
+          ./gradlew assembleRelease --no-daemon
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | sort -V | tail -1)/apksigner sign \
+            --ks release.keystore --ks-pass pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
+            --ks-key-alias ${{ secrets.ANDROID_KEY_ALIAS }} --key-pass pass:${{ secrets.ANDROID_KEY_PASSWORD }} \
+            --out app/build/outputs/apk/release/escola-plus.apk app/build/outputs/apk/release/app-release-unsigned.apk
+          rm release.keystore
+
+      - name: Publicar APK como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: escola-plus-apk
+          path: |
+            web/android/app/build/outputs/apk/debug/app-debug.apk
+            web/android/app/build/outputs/apk/release/escola-plus.apk
+          if-no-files-found: ignore
+
+      - name: Anexar APK à release (em tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            web/android/app/build/outputs/apk/debug/app-debug.apk
+            web/android/app/build/outputs/apk/release/escola-plus.apk
+          fail_on_unmatched_files: false

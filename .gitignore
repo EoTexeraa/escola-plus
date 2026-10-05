@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.venv/
+data/
+*.db
+*.db-*
+.env
+.env.*
+!.env.example
+web/android/app/build/
+web/android/.gradle/
+*.apk
+coverage/
+*.tsbuildinfo

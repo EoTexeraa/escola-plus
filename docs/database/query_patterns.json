@@ -1,0 +1,354 @@
+{
+  "queries": [
+    {
+      "id": "login",
+      "type": "SELECT",
+      "table": "users",
+      "description": "Login por nome de usuário",
+      "where_conditions": [
+        {
+          "column": "username",
+          "operator": "=",
+          "selectivity": 0.002
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [],
+      "group_by": [],
+      "frequency": 2000,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "student_grades",
+      "type": "SELECT",
+      "table": "grades",
+      "description": "Boletim do aluno (todas as matérias, bimestres)",
+      "where_conditions": [
+        {
+          "column": "student_id",
+          "operator": "=",
+          "selectivity": 0.002
+        },
+        {
+          "column": "class_id",
+          "operator": "=",
+          "selectivity": 0.05
+        }
+      ],
+      "join_conditions": [
+        {
+          "local_column": "subject_id",
+          "foreign_table": "subjects",
+          "foreign_column": "id",
+          "join_type": "INNER"
+        }
+      ],
+      "order_by": [
+        {
+          "column": "subject_id",
+          "direction": "ASC"
+        },
+        {
+          "column": "bimester",
+          "direction": "ASC"
+        },
+        {
+          "column": "exam_number",
+          "direction": "ASC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 3000,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "grade_sheet",
+      "type": "SELECT",
+      "table": "grades",
+      "description": "Planilha do professor: turma + matéria + bimestre",
+      "where_conditions": [
+        {
+          "column": "class_id",
+          "operator": "=",
+          "selectivity": 0.05
+        },
+        {
+          "column": "subject_id",
+          "operator": "=",
+          "selectivity": 0.125
+        },
+        {
+          "column": "bimester",
+          "operator": "=",
+          "selectivity": 0.25
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "student_id",
+          "direction": "ASC"
+        },
+        {
+          "column": "exam_number",
+          "direction": "ASC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 400,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "class_students",
+      "type": "SELECT",
+      "table": "users",
+      "description": "Alunos de uma turma",
+      "where_conditions": [
+        {
+          "column": "class_id",
+          "operator": "=",
+          "selectivity": 0.05
+        },
+        {
+          "column": "role",
+          "operator": "=",
+          "selectivity": 0.9
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "full_name",
+          "direction": "ASC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 500,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "announcements_feed",
+      "type": "SELECT",
+      "table": "announcements",
+      "description": "Mural: avisos da turma + gerais",
+      "where_conditions": [
+        {
+          "column": "class_id",
+          "operator": "=",
+          "selectivity": 0.3
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "created_at",
+          "direction": "DESC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 2500,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "unread_reads",
+      "type": "SELECT",
+      "table": "announcement_reads",
+      "description": "Avisos já lidos pelo usuário",
+      "where_conditions": [
+        {
+          "column": "user_id",
+          "operator": "=",
+          "selectivity": 0.002
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [],
+      "group_by": [],
+      "frequency": 2500,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "homework_list",
+      "type": "SELECT",
+      "table": "homework",
+      "description": "Tarefas da turma por prazo",
+      "where_conditions": [
+        {
+          "column": "class_id",
+          "operator": "=",
+          "selectivity": 0.05
+        },
+        {
+          "column": "due_date",
+          "operator": ">=",
+          "selectivity": 0.3
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "due_date",
+          "direction": "ASC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 2000,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "homework_done",
+      "type": "SELECT",
+      "table": "homework_completions",
+      "description": "Tarefas concluídas pelo aluno",
+      "where_conditions": [
+        {
+          "column": "student_id",
+          "operator": "=",
+          "selectivity": 0.002
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [],
+      "group_by": [],
+      "frequency": 2000,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "calendar_month",
+      "type": "SELECT",
+      "table": "calendar_events",
+      "description": "Eventos do mês (turma + gerais)",
+      "where_conditions": [
+        {
+          "column": "starts_on",
+          "operator": "BETWEEN",
+          "selectivity": 0.08
+        },
+        {
+          "column": "class_id",
+          "operator": "=",
+          "selectivity": 0.3
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "starts_on",
+          "direction": "ASC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 1500,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "routines",
+      "type": "SELECT",
+      "table": "study_routines",
+      "description": "Rotina semanal do aluno",
+      "where_conditions": [
+        {
+          "column": "student_id",
+          "operator": "=",
+          "selectivity": 0.002
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "weekday",
+          "direction": "ASC"
+        },
+        {
+          "column": "start_time",
+          "direction": "ASC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 1000,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "routine_checks",
+      "type": "SELECT",
+      "table": "study_routine_checks",
+      "description": "Checks da semana",
+      "where_conditions": [
+        {
+          "column": "routine_id",
+          "operator": "=",
+          "selectivity": 0.01
+        },
+        {
+          "column": "done_on",
+          "operator": "BETWEEN",
+          "selectivity": 0.02
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [],
+      "group_by": [],
+      "frequency": 1000,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "teacher_assignments",
+      "type": "SELECT",
+      "table": "teaching_assignments",
+      "description": "Turmas/matérias do professor",
+      "where_conditions": [
+        {
+          "column": "teacher_id",
+          "operator": "=",
+          "selectivity": 0.03
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [],
+      "group_by": [],
+      "frequency": 400,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "audit_recent",
+      "type": "SELECT",
+      "table": "audit_log",
+      "description": "Auditoria recente (admin)",
+      "where_conditions": [
+        {
+          "column": "created_at",
+          "operator": ">=",
+          "selectivity": 0.1
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [
+        {
+          "column": "created_at",
+          "direction": "DESC"
+        }
+      ],
+      "group_by": [],
+      "frequency": 20,
+      "avg_execution_time_ms": 1
+    },
+    {
+      "id": "key_lookup",
+      "type": "SELECT",
+      "table": "access_keys",
+      "description": "Validar chave de acesso no cadastro",
+      "where_conditions": [
+        {
+          "column": "key_hash",
+          "operator": "=",
+          "selectivity": 0.01
+        }
+      ],
+      "join_conditions": [],
+      "order_by": [],
+      "group_by": [],
+      "frequency": 10,
+      "avg_execution_time_ms": 1
+    }
+  ]
+}

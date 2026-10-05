@@ -1,0 +1,958 @@
+{
+  "analysis_summary": {
+    "tables_analyzed": 14,
+    "query_patterns_analyzed": 14,
+    "existing_indexes": 6,
+    "total_recommendations": 27,
+    "high_priority_recommendations": 1,
+    "redundancy_issues_found": 0
+  },
+  "index_recommendations": {
+    "high_priority": [
+      {
+        "recommendation_id": "8e1dcaa6",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_subject_id_join",
+          "table": "grades",
+          "columns": [
+            "subject_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize JOIN with subjects table on subject_id",
+        "query_patterns_helped": [
+          "student_grades",
+          "grade_sheet"
+        ],
+        "estimated_benefit": "Very High (frequent JOINs)",
+        "estimated_overhead": "Low (single column for JOIN)",
+        "priority": 2,
+        "sql_statement": "CREATE INDEX idx_grades_subject_id_join ON grades (subject_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "join_optimization": true
+        }
+      }
+    ],
+    "medium_priority": [
+      {
+        "recommendation_id": "133f5396",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_class_id",
+          "table": "grades",
+          "columns": [
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE class_id = queries (used 3000 times)",
+        "query_patterns_helped": [
+          "student_grades",
+          "grade_sheet"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_grades_class_id ON grades (class_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "d8eab33e",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_bimester",
+          "table": "grades",
+          "columns": [
+            "bimester"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE bimester = queries (used 400 times)",
+        "query_patterns_helped": [
+          "grade_sheet"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_grades_bimester ON grades (bimester);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "53190189",
+        "table": "users",
+        "recommended_index": {
+          "name": "idx_users_class_id",
+          "table": "users",
+          "columns": [
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE class_id = queries (used 500 times)",
+        "query_patterns_helped": [
+          "class_students"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_users_class_id ON users (class_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "89c29cdb",
+        "table": "users",
+        "recommended_index": {
+          "name": "idx_users_role",
+          "table": "users",
+          "columns": [
+            "role"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE role = queries (used 500 times)",
+        "query_patterns_helped": [
+          "class_students"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_users_role ON users (role);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "9b1212a2",
+        "table": "announcements",
+        "recommended_index": {
+          "name": "idx_announcements_class_id",
+          "table": "announcements",
+          "columns": [
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE class_id = queries (used 2500 times)",
+        "query_patterns_helped": [
+          "announcements_feed"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_announcements_class_id ON announcements (class_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "defeef40",
+        "table": "announcement_reads",
+        "recommended_index": {
+          "name": "idx_announcement_reads_user_id",
+          "table": "announcement_reads",
+          "columns": [
+            "user_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE user_id = queries (used 2500 times)",
+        "query_patterns_helped": [
+          "unread_reads"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_announcement_reads_user_id ON announcement_reads (user_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "b9d97be6",
+        "table": "homework",
+        "recommended_index": {
+          "name": "idx_homework_class_id",
+          "table": "homework",
+          "columns": [
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE class_id = queries (used 2000 times)",
+        "query_patterns_helped": [
+          "homework_list"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_homework_class_id ON homework (class_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "d01d34c6",
+        "table": "homework",
+        "recommended_index": {
+          "name": "idx_homework_due_date",
+          "table": "homework",
+          "columns": [
+            "due_date"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE due_date >= queries (used 2000 times)",
+        "query_patterns_helped": [
+          "homework_list"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_homework_due_date ON homework (due_date);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "e1465eda",
+        "table": "homework_completions",
+        "recommended_index": {
+          "name": "idx_homework_completions_student_id",
+          "table": "homework_completions",
+          "columns": [
+            "student_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE student_id = queries (used 2000 times)",
+        "query_patterns_helped": [
+          "homework_done"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_homework_completions_student_id ON homework_completions (student_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "06667e93",
+        "table": "calendar_events",
+        "recommended_index": {
+          "name": "idx_calendar_events_starts_on",
+          "table": "calendar_events",
+          "columns": [
+            "starts_on"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE starts_on BETWEEN queries (used 1500 times)",
+        "query_patterns_helped": [
+          "calendar_month"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_calendar_events_starts_on ON calendar_events (starts_on);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "601a6280",
+        "table": "calendar_events",
+        "recommended_index": {
+          "name": "idx_calendar_events_class_id",
+          "table": "calendar_events",
+          "columns": [
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE class_id = queries (used 1500 times)",
+        "query_patterns_helped": [
+          "calendar_month"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_calendar_events_class_id ON calendar_events (class_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "b358a748",
+        "table": "study_routines",
+        "recommended_index": {
+          "name": "idx_study_routines_student_id",
+          "table": "study_routines",
+          "columns": [
+            "student_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE student_id = queries (used 1000 times)",
+        "query_patterns_helped": [
+          "routines"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_study_routines_student_id ON study_routines (student_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "dbcee910",
+        "table": "study_routine_checks",
+        "recommended_index": {
+          "name": "idx_study_routine_checks_routine_id",
+          "table": "study_routine_checks",
+          "columns": [
+            "routine_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE routine_id = queries (used 1000 times)",
+        "query_patterns_helped": [
+          "routine_checks"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_study_routine_checks_routine_id ON study_routine_checks (routine_id);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      },
+      {
+        "recommendation_id": "0a4c34ee",
+        "table": "study_routine_checks",
+        "recommended_index": {
+          "name": "idx_study_routine_checks_done_on",
+          "table": "study_routine_checks",
+          "columns": [
+            "done_on"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize WHERE done_on BETWEEN queries (used 1000 times)",
+        "query_patterns_helped": [
+          "routine_checks"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Low (single column)",
+        "priority": 3,
+        "sql_statement": "CREATE INDEX idx_study_routine_checks_done_on ON study_routine_checks (done_on);",
+        "selectivity_analysis": {
+          "column_selectivity": 0.05,
+          "estimated_reduction": "5%"
+        }
+      }
+    ],
+    "low_priority": [
+      {
+        "recommendation_id": "bbb3f150",
+        "table": "homework",
+        "recommended_index": {
+          "name": "idx_homework_class_id_due_date",
+          "table": "homework",
+          "columns": [
+            "class_id",
+            "due_date"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize multi-column WHERE conditions: class_id, due_date",
+        "query_patterns_helped": [
+          "homework_list",
+          "homework_list"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Medium (composite index with 2 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_homework_class_id_due_date ON homework (class_id, due_date);",
+        "selectivity_analysis": {
+          "column_selectivities": {
+            "class_id": 0.05,
+            "due_date": 0.05
+          },
+          "combined_selectivity": 0.05,
+          "column_order_rationale": "Ordered by selectivity (most selective first)"
+        }
+      },
+      {
+        "recommendation_id": "e5f6d3dc",
+        "table": "calendar_events",
+        "recommended_index": {
+          "name": "idx_calendar_events_starts_on_class_id",
+          "table": "calendar_events",
+          "columns": [
+            "starts_on",
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize multi-column WHERE conditions: starts_on, class_id",
+        "query_patterns_helped": [
+          "calendar_month",
+          "calendar_month"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Medium (composite index with 2 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_calendar_events_starts_on_class_id ON calendar_events (starts_on, class_id);",
+        "selectivity_analysis": {
+          "column_selectivities": {
+            "starts_on": 0.05,
+            "class_id": 0.05
+          },
+          "combined_selectivity": 0.05,
+          "column_order_rationale": "Ordered by selectivity (most selective first)"
+        }
+      },
+      {
+        "recommendation_id": "18dd5956",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_student_id_class_id",
+          "table": "grades",
+          "columns": [
+            "student_id",
+            "class_id"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize multi-column WHERE conditions: student_id, class_id",
+        "query_patterns_helped": [
+          "student_grades"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Medium (composite index with 2 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_grades_student_id_class_id ON grades (student_id, class_id);",
+        "selectivity_analysis": {
+          "column_selectivities": {
+            "student_id": 0.05,
+            "class_id": 0.05
+          },
+          "combined_selectivity": 0.05,
+          "column_order_rationale": "Ordered by selectivity (most selective first)"
+        }
+      },
+      {
+        "recommendation_id": "76edd33a",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_covering_student_id_class_id_subject_id",
+          "table": "grades",
+          "columns": [
+            "student_id",
+            "class_id",
+            "subject_id",
+            "bimester",
+            "exam_number"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": [],
+          "size_estimate": null
+        },
+        "reason": "Covering index for WHERE + ORDER BY optimization",
+        "query_patterns_helped": [
+          "student_grades"
+        ],
+        "estimated_benefit": "High (eliminates table lookups for SELECT)",
+        "estimated_overhead": "High (covering index with 5 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_grades_covering_student_id_class_id_subject_id ON grades (student_id, class_id, subject_id, bimester, exam_number);",
+        "selectivity_analysis": {
+          "main_columns_selectivity": 0.05,
+          "covering_benefit": "Eliminates table lookup for SELECT queries"
+        }
+      },
+      {
+        "recommendation_id": "dbc3964e",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_class_id_subject_id_bimester",
+          "table": "grades",
+          "columns": [
+            "class_id",
+            "subject_id",
+            "bimester"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize multi-column WHERE conditions: class_id, subject_id, bimester",
+        "query_patterns_helped": [
+          "grade_sheet"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Medium (composite index with 3 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_grades_class_id_subject_id_bimester ON grades (class_id, subject_id, bimester);",
+        "selectivity_analysis": {
+          "column_selectivities": {
+            "class_id": 0.05,
+            "subject_id": 0.05,
+            "bimester": 0.05
+          },
+          "combined_selectivity": 0.05000000000000001,
+          "column_order_rationale": "Ordered by selectivity (most selective first)"
+        }
+      },
+      {
+        "recommendation_id": "76edd33a",
+        "table": "grades",
+        "recommended_index": {
+          "name": "idx_grades_covering_class_id_subject_id_bimester",
+          "table": "grades",
+          "columns": [
+            "class_id",
+            "subject_id",
+            "bimester",
+            "student_id",
+            "exam_number"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": [],
+          "size_estimate": null
+        },
+        "reason": "Covering index for WHERE + ORDER BY optimization",
+        "query_patterns_helped": [
+          "grade_sheet"
+        ],
+        "estimated_benefit": "High (eliminates table lookups for SELECT)",
+        "estimated_overhead": "High (covering index with 5 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_grades_covering_class_id_subject_id_bimester ON grades (class_id, subject_id, bimester, student_id, exam_number);",
+        "selectivity_analysis": {
+          "main_columns_selectivity": 0.05,
+          "covering_benefit": "Eliminates table lookup for SELECT queries"
+        }
+      },
+      {
+        "recommendation_id": "775b3232",
+        "table": "users",
+        "recommended_index": {
+          "name": "idx_users_class_id_role",
+          "table": "users",
+          "columns": [
+            "class_id",
+            "role"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize multi-column WHERE conditions: class_id, role",
+        "query_patterns_helped": [
+          "class_students"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Medium (composite index with 2 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_users_class_id_role ON users (class_id, role);",
+        "selectivity_analysis": {
+          "column_selectivities": {
+            "class_id": 0.05,
+            "role": 0.05
+          },
+          "combined_selectivity": 0.05,
+          "column_order_rationale": "Ordered by selectivity (most selective first)"
+        }
+      },
+      {
+        "recommendation_id": "03157dc4",
+        "table": "users",
+        "recommended_index": {
+          "name": "idx_users_covering_class_id_role_full_name",
+          "table": "users",
+          "columns": [
+            "class_id",
+            "role",
+            "full_name"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": [],
+          "size_estimate": null
+        },
+        "reason": "Covering index for WHERE + ORDER BY optimization",
+        "query_patterns_helped": [
+          "class_students"
+        ],
+        "estimated_benefit": "High (eliminates table lookups for SELECT)",
+        "estimated_overhead": "High (covering index with 3 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_users_covering_class_id_role_full_name ON users (class_id, role, full_name);",
+        "selectivity_analysis": {
+          "main_columns_selectivity": 0.05,
+          "covering_benefit": "Eliminates table lookup for SELECT queries"
+        }
+      },
+      {
+        "recommendation_id": "bad9306a",
+        "table": "announcements",
+        "recommended_index": {
+          "name": "idx_announcements_covering_class_id_created_at",
+          "table": "announcements",
+          "columns": [
+            "class_id",
+            "created_at"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": [],
+          "size_estimate": null
+        },
+        "reason": "Covering index for WHERE + ORDER BY optimization",
+        "query_patterns_helped": [
+          "announcements_feed"
+        ],
+        "estimated_benefit": "High (eliminates table lookups for SELECT)",
+        "estimated_overhead": "High (covering index with 2 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_announcements_covering_class_id_created_at ON announcements (class_id, created_at);",
+        "selectivity_analysis": {
+          "main_columns_selectivity": 0.05,
+          "covering_benefit": "Eliminates table lookup for SELECT queries"
+        }
+      },
+      {
+        "recommendation_id": "83ea145e",
+        "table": "study_routines",
+        "recommended_index": {
+          "name": "idx_study_routines_covering_student_id_weekday_start_time",
+          "table": "study_routines",
+          "columns": [
+            "student_id",
+            "weekday",
+            "start_time"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": [],
+          "size_estimate": null
+        },
+        "reason": "Covering index for WHERE + ORDER BY optimization",
+        "query_patterns_helped": [
+          "routines"
+        ],
+        "estimated_benefit": "High (eliminates table lookups for SELECT)",
+        "estimated_overhead": "High (covering index with 3 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_study_routines_covering_student_id_weekday_start_time ON study_routines (student_id, weekday, start_time);",
+        "selectivity_analysis": {
+          "main_columns_selectivity": 0.05,
+          "covering_benefit": "Eliminates table lookup for SELECT queries"
+        }
+      },
+      {
+        "recommendation_id": "38227cad",
+        "table": "study_routine_checks",
+        "recommended_index": {
+          "name": "idx_study_routine_checks_routine_id_done_on",
+          "table": "study_routine_checks",
+          "columns": [
+            "routine_id",
+            "done_on"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": null,
+          "size_estimate": null
+        },
+        "reason": "Optimize multi-column WHERE conditions: routine_id, done_on",
+        "query_patterns_helped": [
+          "routine_checks"
+        ],
+        "estimated_benefit": "Medium",
+        "estimated_overhead": "Medium (composite index with 2 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_study_routine_checks_routine_id_done_on ON study_routine_checks (routine_id, done_on);",
+        "selectivity_analysis": {
+          "column_selectivities": {
+            "routine_id": 0.05,
+            "done_on": 0.05
+          },
+          "combined_selectivity": 0.05,
+          "column_order_rationale": "Ordered by selectivity (most selective first)"
+        }
+      },
+      {
+        "recommendation_id": "44fa413e",
+        "table": "audit_log",
+        "recommended_index": {
+          "name": "idx_audit_log_covering_created_at",
+          "table": "audit_log",
+          "columns": [
+            "created_at"
+          ],
+          "unique": false,
+          "index_type": "btree",
+          "partial_condition": null,
+          "include_columns": [],
+          "size_estimate": null
+        },
+        "reason": "Covering index for WHERE + ORDER BY optimization",
+        "query_patterns_helped": [
+          "audit_recent"
+        ],
+        "estimated_benefit": "High (eliminates table lookups for SELECT)",
+        "estimated_overhead": "High (covering index with 1 columns)",
+        "priority": 4,
+        "sql_statement": "CREATE INDEX idx_audit_log_covering_created_at ON audit_log (created_at);",
+        "selectivity_analysis": {
+          "main_columns_selectivity": 0.05,
+          "covering_benefit": "Eliminates table lookup for SELECT queries"
+        }
+      }
+    ]
+  },
+  "redundancy_analysis": [],
+  "size_estimates": {
+    "school_classes": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 5,
+      "index_overhead_per_column_mb": 2
+    },
+    "subjects": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 5,
+      "index_overhead_per_column_mb": 2
+    },
+    "users": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 5,
+      "index_overhead_per_column_mb": 2
+    },
+    "access_keys": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 5,
+      "index_overhead_per_column_mb": 2
+    },
+    "teaching_assignments": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 5,
+      "index_overhead_per_column_mb": 2
+    },
+    "grades": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 5,
+      "index_overhead_per_column_mb": 2
+    },
+    "announcements": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "announcement_reads": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "homework": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "homework_completions": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "calendar_events": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "study_routines": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "study_routine_checks": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    },
+    "audit_log": {
+      "estimated_table_rows": 10000,
+      "existing_indexes_size_mb": 0,
+      "index_overhead_per_column_mb": 2
+    }
+  },
+  "sql_statements": {
+    "create_indexes": [
+      "CREATE INDEX idx_grades_subject_id_join ON grades (subject_id);",
+      "CREATE INDEX idx_grades_class_id ON grades (class_id);",
+      "CREATE INDEX idx_grades_bimester ON grades (bimester);",
+      "CREATE INDEX idx_users_class_id ON users (class_id);",
+      "CREATE INDEX idx_users_role ON users (role);",
+      "CREATE INDEX idx_announcements_class_id ON announcements (class_id);",
+      "CREATE INDEX idx_announcement_reads_user_id ON announcement_reads (user_id);",
+      "CREATE INDEX idx_homework_class_id ON homework (class_id);",
+      "CREATE INDEX idx_homework_due_date ON homework (due_date);",
+      "CREATE INDEX idx_homework_completions_student_id ON homework_completions (student_id);",
+      "CREATE INDEX idx_calendar_events_starts_on ON calendar_events (starts_on);",
+      "CREATE INDEX idx_calendar_events_class_id ON calendar_events (class_id);",
+      "CREATE INDEX idx_study_routines_student_id ON study_routines (student_id);",
+      "CREATE INDEX idx_study_routine_checks_routine_id ON study_routine_checks (routine_id);",
+      "CREATE INDEX idx_study_routine_checks_done_on ON study_routine_checks (done_on);",
+      "CREATE INDEX idx_homework_class_id_due_date ON homework (class_id, due_date);",
+      "CREATE INDEX idx_calendar_events_starts_on_class_id ON calendar_events (starts_on, class_id);",
+      "CREATE INDEX idx_grades_student_id_class_id ON grades (student_id, class_id);",
+      "CREATE INDEX idx_grades_covering_student_id_class_id_subject_id ON grades (student_id, class_id, subject_id, bimester, exam_number);",
+      "CREATE INDEX idx_grades_class_id_subject_id_bimester ON grades (class_id, subject_id, bimester);",
+      "CREATE INDEX idx_grades_covering_class_id_subject_id_bimester ON grades (class_id, subject_id, bimester, student_id, exam_number);",
+      "CREATE INDEX idx_users_class_id_role ON users (class_id, role);",
+      "CREATE INDEX idx_users_covering_class_id_role_full_name ON users (class_id, role, full_name);",
+      "CREATE INDEX idx_announcements_covering_class_id_created_at ON announcements (class_id, created_at);",
+      "CREATE INDEX idx_study_routines_covering_student_id_weekday_start_time ON study_routines (student_id, weekday, start_time);",
+      "CREATE INDEX idx_study_routine_checks_routine_id_done_on ON study_routine_checks (routine_id, done_on);",
+      "CREATE INDEX idx_audit_log_covering_created_at ON audit_log (created_at);"
+    ],
+    "drop_redundant": []
+  },
+  "performance_impact": {
+    "query_optimization": {
+      "queries_improved": 11,
+      "high_impact_queries": 6,
+      "benefit_distribution": {
+        "Very High (frequent JOINs)": 1,
+        "Medium": 20,
+        "High (eliminates table lookups for SELECT)": 6
+      }
+    },
+    "write_overhead": {
+      "total_new_indexes": 27,
+      "estimated_insert_overhead": "135%",
+      "tables_most_affected": [
+        [
+          "grades",
+          7
+        ],
+        [
+          "users",
+          4
+        ],
+        [
+          "homework",
+          3
+        ]
+      ]
+    },
+    "storage_impact": {}
+  }
+}

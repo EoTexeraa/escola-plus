@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/*
+ * Tokens de docs/design/tokens.css (skill ui-design-system, validados WCAG AA).
+ * A paleta padrão do Tailwind é desligada: só os tokens aprovados podem ser usados.
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-raised: #FFFFFF;
+  --color-text: #0F172A;
+  --color-muted: #475569;
+  --color-line: #E2E8F0;
+  --color-control: #64748B;
+  --color-primary: #1D4ED8;
+  --color-primary-hover: #1E40AF;
+  --color-on-primary: #FFFFFF;
+  --color-primary-soft: #DBEAFE;
+  --color-on-primary-soft: #1E3A8A;
+  --color-success: #047857;
+  --color-success-soft: #D1FAE5;
+  --color-warning: #B45309;
+  --color-warning-soft: #FEF3C7;
+  --color-danger: #B91C1C;
+  --color-danger-soft: #FEE2E2;
+  --color-focus: #1D4ED8;
+  /* Gráficos (skill dataviz: validate_palette.js — claro e escuro passam) */
+  --color-chart-good: #047857;
+  --color-chart-warn: #B45309;
+  --color-chart-neutral: #64748B;
+
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 1px 3px rgb(15 23 42 / 0.08), 0 4px 12px rgb(15 23 42 / 0.06);
+  --shadow-lg: 0 4px 6px rgb(15 23 42 / 0.05), 0 12px 32px rgb(15 23 42 / 0.10);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-fade-up: fade-up 400ms var(--ease-out) both;
+  --animate-fade-in: fade-in 250ms var(--ease-out) both;
+  --animate-scale-in: scale-in 250ms var(--ease-out) both;
+  --animate-slide-in: slide-in 300ms var(--ease-out) both;
+  --animate-shimmer: shimmer 1.4s linear infinite;
+
+  @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+  @keyframes slide-in { from { transform: translateX(-100%); } to { transform: none; } }
+  @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-24px, 18px); } }
+}
+
+@layer base {
+  :root { color-scheme: light; }
+
+  :root[data-theme='dark'] {
+    --color-bg: #0B1220;
+    --color-surface: #111A2E;
+    --color-raised: #16213A;
+    --color-text: #E2E8F0;
+    --color-muted: #94A3B8;
+    --color-line: #1E293B;
+    --color-control: #7C8BA1;
+    --color-primary: #60A5FA;
+    --color-primary-hover: #93C5FD;
+    --color-on-primary: #0B1220;
+    --color-primary-soft: #1E3A8A;
+    --color-on-primary-soft: #DBEAFE;
+    --color-success: #34D399;
+    --color-success-soft: #064E3B;
+    --color-warning: #FBBF24;
+    --color-warning-soft: #78350F;
+    --color-danger: #F87171;
+    --color-danger-soft: #450A0A;
+    --color-focus: #93C5FD;
+    --color-chart-good: #059669;
+    --color-chart-warn: #D97706;
+    --color-chart-neutral: #7C8BA1;
+    --shadow-md: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.45);
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --color-bg: #0B1220;
+      --color-surface: #111A2E;
+      --color-raised: #16213A;
+      --color-text: #E2E8F0;
+      --color-muted: #94A3B8;
+      --color-line: #1E293B;
+      --color-control: #7C8BA1;
+      --color-primary: #60A5FA;
+      --color-primary-hover: #93C5FD;
+      --color-on-primary: #0B1220;
+      --color-primary-soft: #1E3A8A;
+      --color-on-primary-soft: #DBEAFE;
+      --color-success: #34D399;
+      --color-success-soft: #064E3B;
+      --color-warning: #FBBF24;
+      --color-warning-soft: #78350F;
+      --color-danger: #F87171;
+      --color-danger-soft: #450A0A;
+      --color-focus: #93C5FD;
+    --color-chart-good: #059669;
+    --color-chart-warn: #D97706;
+    --color-chart-neutral: #7C8BA1;
+      --shadow-md: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.3);
+      --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.45);
+      color-scheme: dark;
+    }
+  }
+
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    @apply bg-bg text-text font-sans antialiased;
+    min-height: 100dvh;
+  }
+  /* Foco sempre visível (WCAG 2.4.7) */
+  :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; border-radius: 4px; }
+  ::selection { background: var(--color-primary-soft); color: var(--color-on-primary-soft); }
+}
+
+@layer components {
+  .card { @apply bg-surface rounded-lg border border-line shadow-sm; }
+  .skeleton {
+    @apply rounded-md;
+    background: linear-gradient(90deg, var(--color-line) 25%, var(--color-raised) 50%, var(--color-line) 75%);
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+  .brand-gradient { background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #0369A1 100%); }
+  /* Entrada em cascata: filhos com --i aparecem um após o outro */
+  .stagger > * { animation: var(--animate-fade-up); animation-delay: calc(var(--i, 0) * 50ms); }
+}
+
+/* Quem pede menos movimento no sistema não vê animações (decisões #6 e #8) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
