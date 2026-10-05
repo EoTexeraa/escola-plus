@@ -32,7 +32,8 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     env:
-      ESCOLA_SERVER_URL: ${{ inputs.server_url || vars.ESCOLA_SERVER_URL || secrets.ESCOLA_SERVER_URL }}
+      # Endereço publicado (Render); pode ser trocado pela variável ESCOLA_SERVER_URL ou na execução manual
+      ESCOLA_SERVER_URL: ${{ inputs.server_url || vars.ESCOLA_SERVER_URL || 'https://escola-plus.onrender.com' }}
       HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4

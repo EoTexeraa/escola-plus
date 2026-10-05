@@ -1,5 +1,7 @@
 # Escola+
 
+**No ar:** https://escola-plus.onrender.com · **APK Android:** [Releases](https://github.com/EoTexeraa/escola-plus/releases/latest)
+
 Sistema de gerenciamento escolar do **9º ano**, com app para celular. Alunos acompanham e **lançam as próprias notas**, veem os **conteúdos das provas**, o resumo do bimestre, tarefas de casa, rotina de estudos, avisos e o calendário escolar, com as provas geradas automaticamente pelos Grupos 1 e 2. Professores lançam notas e publicam tarefas, avisos e eventos. A coordenação gerencia a escola, e o Administrador tem acesso a tudo.
 
 - **App web instalável (PWA)** e **APK Android** (Capacitor)
