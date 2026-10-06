@@ -27,9 +27,11 @@ const Schema = z.object({
   username: z.string().trim().toLowerCase().regex(/^[a-z0-9._]{3,30}$/, 'De 3 a 30 caracteres: letras, números, ponto ou _'),
   password: zPassword,
   confirm: z.string(),
-  classId: z.string().optional(),
-  englishLevel: z.string().optional(),
-  accessKey: z.string().trim().optional(),
+  // nullish: campos de outro perfil ficam registrados com null depois de trocar de perfil (ex.: o rádio
+  // "Nível de inglês" do aluno ao escolher Administrador) e não podem travar o envio
+  classId: z.string().nullish(),
+  englishLevel: z.string().nullish(),
+  accessKey: z.string().trim().nullish(),
   securityQuestion: z.string().min(10, 'Escolha uma pergunta'),
   securityAnswer: z.string().trim().min(2, 'Resposta muito curta').max(60),
 }).superRefine((v, ctx) => {
@@ -96,7 +98,13 @@ export default function RegisterPage() {
 
   return (
     <AuthLayout title="Criar conta" subtitle="Leva menos de um minuto.">
-      <form onSubmit={handleSubmit((f) => { setMessage(null); submit.mutate(f); })} className="space-y-5" noValidate>
+      <form
+        onSubmit={handleSubmit(
+          (f) => { setMessage(null); submit.mutate(f); },
+          // Nunca falhar em silêncio: se o erro for num campo que não está visível, avisa aqui
+          () => setMessage('Confira os campos destacados em vermelho.'),
+        )}
+        className="space-y-5" noValidate>
         <fieldset>
           <legend className="mb-2 text-sm font-medium">Eu sou</legend>
           <div className={cx('grid gap-2', roles.length === 4 ? 'grid-cols-2' : 'grid-cols-3')} role="radiogroup">
