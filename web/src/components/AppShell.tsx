@@ -15,6 +15,11 @@ import { cx, IconButton } from './ui';
 
 interface NavItem { to: string; label: string; icon: LucideIcon; badge?: number }
 
+/** Nome curto na barra inferior do celular (cabe inteiro em telas de 320px). */
+const SHORT: Record<string, string> = {
+  '/conteudos': 'Conteúdos', '/calendario': 'Agenda', '/lancar-notas': 'Lançar', '/admin/usuarios': 'Usuários', '/tarefas': 'Tarefas',
+};
+
 function navFor(role: Role, unread: number): { main: NavItem[]; mobile: string[] } {
   if (role === 'student') {
     return {
@@ -112,6 +117,18 @@ export function AppShell({ me }: { me: Me }) {
 
   useEffect(() => { setDrawer(false); window.scrollTo(0, 0); }, [location.pathname]);
 
+  // Celular: enquanto um campo de texto está em foco (teclado aberto), esconde a barra inferior
+  // para ela não cobrir o campo — no Android a barra fixa sobe junto com o teclado.
+  useEffect(() => {
+    const isField = (el: EventTarget | null) =>
+      el instanceof HTMLElement && el.matches('input:not([type=checkbox]):not([type=radio]):not([type=color]), textarea, select');
+    const onIn = (e: FocusEvent) => { if (isField(e.target)) document.documentElement.classList.add('typing'); };
+    const onOut = () => document.documentElement.classList.remove('typing');
+    document.addEventListener('focusin', onIn);
+    document.addEventListener('focusout', onOut);
+    return () => { document.removeEventListener('focusin', onIn); document.removeEventListener('focusout', onOut); onOut(); };
+  }, []);
+
   const doLogout = () => logout.mutate(undefined, { onSettled: () => navigate('/login', { replace: true }) });
 
   const profile = (
@@ -159,7 +176,7 @@ export function AppShell({ me }: { me: Me }) {
       </div>
 
       {/* Barra inferior (celular) */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur lg:hidden" aria-label="Navegação rápida"
+      <nav className="bottom-nav fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur lg:hidden" aria-label="Navegação rápida"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <ul className="grid grid-cols-5">
           {mobileItems.map(({ to, label, icon: Icon, badge }) => (
@@ -170,7 +187,7 @@ export function AppShell({ me }: { me: Me }) {
                     <span className={cx('grid h-8 w-14 place-items-center rounded-full transition-all duration-300', isActive && 'bg-primary-soft text-on-primary-soft')}>
                       <Icon className={cx('size-5 transition-transform duration-300', isActive && 'scale-110')} aria-hidden />
                     </span>
-                    <span className="max-w-full truncate px-1">{label.split(' ')[0]}</span>
+                    <span className="max-w-full truncate px-0.5 tracking-tight">{SHORT[to] ?? label.split(' ')[0]}</span>
                     {!!badge && <span className="absolute right-[22%] top-1.5 size-2.5 rounded-full bg-danger" aria-label={`${badge} não lidos`} />}
                   </>
                 )}

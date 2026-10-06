@@ -44,7 +44,29 @@ export default function KeysPage() {
       {isLoading ? <PageSkeleton /> : error || !data ? <ErrorState error={error} onRetry={() => refetch()} /> : data.length === 0 ? (
         <Card><EmptyState icon={KeyRound} title="Nenhuma chave" /></Card>
       ) : (
-        <Card className="overflow-x-auto p-0 sm:p-0">
+        <>
+        <ul className="space-y-2 md:hidden">
+          {data.map((k) => {
+            const st = status(k);
+            return (
+              <li key={k.id}>
+                <Card className="flex items-start gap-3 p-3">
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span className="font-mono font-semibold">{k.keyHint}</span>
+                      <Badge tone={k.role === 'coordinator' ? 'warning' : 'primary'} icon={false}>{k.role === 'coordinator' ? 'Coordenação' : 'Professor'}</Badge>
+                      <Badge tone={st.tone}>{st.label}</Badge>
+                    </p>
+                    {k.label && <p className="truncate text-sm">{k.label}</p>}
+                    <p className="text-sm text-muted">Usos {k.useCount}/{k.maxUses} · {k.expiresAt ? `até ${new Date(k.expiresAt).toLocaleDateString('pt-BR')}` : 'sem validade'}</p>
+                  </div>
+                  {st.label === 'Ativa' && <IconButton label="Revogar chave" icon={Ban} className="hover:bg-danger-soft hover:text-danger" onClick={() => { if (confirm('Revogar esta chave? Ela deixará de funcionar.')) revoke.mutate(k.id); }} />}
+                </Card>
+              </li>
+            );
+          })}
+        </ul>
+        <Card className="hidden overflow-x-auto p-0 sm:p-0 md:block">
           <table className="w-full min-w-[40rem] text-left text-sm">
             <thead className="border-b border-line bg-bg text-muted">
               <tr>{['Chave', 'Para', 'Descrição', 'Usos', 'Validade', 'Situação', ''].map((h) => <th key={h} scope="col" className="p-3 font-medium">{h}</th>)}</tr>
@@ -69,6 +91,7 @@ export default function KeysPage() {
             </tbody>
           </table>
         </Card>
+        </>
       )}
 
       <Modal open={creating} onClose={() => setCreating(false)} title="Gerar chave de acesso"

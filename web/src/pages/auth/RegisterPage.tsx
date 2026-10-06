@@ -139,9 +139,13 @@ export default function RegisterPage() {
           hint="Você vai usar para entrar. Ex.: lucas.oliveira" error={errors.username?.message} {...register('username')} />
 
         {role === 'student' && (
-          <>
+          <section className="space-y-4 rounded-lg border border-line bg-bg p-4" aria-labelledby="sec-turma">
+            <div>
+              <h2 id="sec-turma" className="font-semibold">Sua turma</h2>
+              <p className="text-sm text-muted">É só escolher, não precisa de senha.</p>
+            </div>
             {singleClass ? (
-              <p className="rounded-lg bg-primary-soft px-4 py-3 text-sm text-on-primary-soft">
+              <p className="rounded-lg bg-primary-soft px-4 py-3 text-on-primary-soft">
                 Turma: <strong>{singleClass.name}</strong> · {singleClass.schoolYear}
               </p>
             ) : (
@@ -166,17 +170,23 @@ export default function RegisterPage() {
                 ? <p role="alert" className="mt-1.5 text-sm text-danger">{errors.englishLevel.message}</p>
                 : <p className="mt-1.5 text-sm text-muted">Você verá só as aulas, provas e conteúdos de Inglês do seu nível.</p>}
             </fieldset>
-          </>
+          </section>
         )}
 
-        <PasswordField label="Senha" autoComplete="new-password" meter={password}
-          hint={role === 'student' ? 'Mínimo de 8 caracteres, com letras e números.' : 'Mínimo de 10 caracteres, com letras e números.'}
-          error={errors.password?.message} {...register('password')} />
-        <PasswordField label="Confirme a senha" autoComplete="new-password" error={errors.confirm?.message} {...register('confirm')} />
+        <section className="space-y-4 rounded-lg border border-line bg-bg p-4" aria-labelledby="sec-senha">
+          <div>
+            <h2 id="sec-senha" className="font-semibold">Senha para entrar no app</h2>
+            <p className="text-sm text-muted">Você vai usar com o nome de usuário toda vez que entrar.</p>
+          </div>
+          <PasswordField label="Senha" autoComplete="new-password" meter={password}
+            hint={role === 'student' ? 'Mínimo de 8 caracteres, com letras e números.' : 'Mínimo de 10 caracteres, com letras e números.'}
+            error={errors.password?.message} {...register('password')} />
+          <PasswordField label="Confirme a senha" autoComplete="new-password" error={errors.confirm?.message} {...register('confirm')} />
+        </section>
 
         <div className="space-y-4 rounded-lg border border-line bg-bg p-4">
           <div>
-            <p className="font-semibold">Pergunta de segurança</p>
+            <h2 className="font-semibold">Pergunta de segurança</h2>
             <p className="text-sm text-muted">Usada para trocar a senha se você esquecê-la. Escolha algo que só você saiba.</p>
           </div>
           <Select label="Pergunta" error={errors.securityQuestion?.message} {...register('securityQuestion')}>

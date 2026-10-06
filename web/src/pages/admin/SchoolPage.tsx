@@ -63,7 +63,7 @@ function Classes() {
   if (isLoading) return <PageSkeleton />;
   if (error || !data) return <ErrorState error={error} onRetry={() => refetch()} />;
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_20rem]">
+    <div className="grid gap-5 lg:grid-cols-[1fr_20rem] [&>*]:min-w-0">
       <Card className="p-0 sm:p-0">
         <ul className="divide-y divide-line">
           {data.map((c) => (
@@ -133,7 +133,7 @@ function Subjects() {
   if (isLoading) return <PageSkeleton />;
   if (error || !data) return <ErrorState error={error} onRetry={() => refetch()} />;
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_20rem]">
+    <div className="grid gap-5 lg:grid-cols-[1fr_20rem] [&>*]:min-w-0">
       <Card className="p-0 sm:p-0">
         <ul className="divide-y divide-line">
           {data.map((s) => (
@@ -146,7 +146,7 @@ function Subjects() {
                   const [g, wd] = e.target.value ? e.target.value.split('-').map(Number) : [null, null];
                   update.mutate({ id: s.id, examGroup: g ?? null, examWeekday: wd ?? null });
                 }}
-                className="min-h-11 rounded-md border border-control bg-surface px-2 text-sm">
+                className="min-h-11 rounded-md border border-control bg-surface px-2 text-base">
                 <option value="">Sem prova fixa</option>
                 {EXAM_SLOTS.map(([g, wd]) => <option key={`${g}-${wd}`} value={`${g}-${wd}`}>Grupo {g} · {WEEKDAY_NAME[wd]}</option>)}
               </select>
@@ -195,7 +195,7 @@ function Assignments() {
   for (const a of assignments.data) byTeacher.set(a.teacherName, [...(byTeacher.get(a.teacherName) ?? []), a]);
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_20rem]">
+    <div className="grid gap-5 lg:grid-cols-[1fr_20rem] [&>*]:min-w-0">
       <div className="space-y-4">
         {byTeacher.size === 0 && <Card><p className="text-muted">Nenhuma atribuição ainda. Professores só lançam notas e tarefas nas turmas/matérias atribuídas aqui.</p></Card>}
         {[...byTeacher.entries()].map(([teacher, list]) => (
@@ -207,7 +207,7 @@ function Assignments() {
                   <span className="size-2.5 rounded-full" style={{ background: a.color }} aria-hidden />
                   {a.subject} · {a.className}
                   <button aria-label={`Remover ${a.subject} de ${a.className}`} onClick={() => remove.mutate(a.id)}
-                    className="grid size-8 place-items-center rounded-full text-muted hover:bg-danger-soft hover:text-danger">
+                    className="grid size-11 place-items-center rounded-full text-muted hover:bg-danger-soft hover:text-danger">
                     <Trash2 className="size-4" aria-hidden />
                   </button>
                 </li>

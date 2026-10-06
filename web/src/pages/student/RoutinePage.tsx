@@ -84,7 +84,7 @@ export default function RoutinePage() {
       </div>
 
       {/* Seletor de dia */}
-      <div role="tablist" aria-label="Dia da semana" className="mb-4 grid grid-cols-7 gap-1 rounded-lg border border-line bg-surface p-1 shadow-sm">
+      <div role="tablist" aria-label="Dia da semana" className="mb-4 grid grid-cols-7 gap-0.5 rounded-lg border border-line bg-surface p-0.5 shadow-sm sm:gap-1 sm:p-1">
         {WEEKDAYS_SHORT.map((d, i) => {
           const count = data.routines.filter((r) => r.weekday === i).length;
           return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { GraduationCap, Info, Pencil, TriangleAlert } from 'lucide-react';
+import { ChevronDown, GraduationCap, Info, Pencil, TriangleAlert } from 'lucide-react';
 import { api } from '../../api/client';
 import type { GradeAuthor, GradeComponent, ReportCard, SubjectRef } from '../../api/types';
 import { computeBimester, MAX_SCORE, type ComponentScores } from '../../lib/grading';
@@ -58,7 +58,7 @@ const AUTHOR_LABEL: Record<GradeAuthor, string> = { student: 'você', staff: 'pr
 function Author({ who }: { who?: GradeAuthor }) {
   if (!who) return null;
   return (
-    <span className="block text-[0.7rem] font-medium text-muted" title={who === 'student' ? 'Lançada por você' : 'Lançada pelo professor/coordenação'}>
+    <span className="block text-xs font-medium text-muted" title={who === 'student' ? 'Lançada por você' : 'Lançada pelo professor/coordenação'}>
       {AUTHOR_LABEL[who]}
     </span>
   );
@@ -66,21 +66,38 @@ function Author({ who }: { who?: GradeAuthor }) {
 
 function BimesterView({ data, bimester, onEdit }: { data: ReportCard; bimester: number; onEdit: (s: SubjectRef) => void }) {
   const items = data.subjects.map((s) => ({ subject: s.subject, b: s.bimesters[bimester - 1]! }));
+  // Celular: lista compacta (matéria · situação · média); um toque abre os detalhes. Telas maiores: tudo aberto.
+  const [open, setOpen] = useState<number | null>(null);
   return (
-    <ul className="grid gap-4 md:grid-cols-2 stagger" key={bimester}>
+    <ul className="grid gap-2 md:grid-cols-2 md:gap-4 stagger [&>*]:min-w-0" key={bimester}>
       {items.map(({ subject, b }, i) => {
         const st = BIMESTER_STATUS[b.status];
+        const isOpen = open === subject.id;
         return (
           <li key={subject.id} style={{ ['--i' as string]: i }}>
-            <Card className="h-full">
+            <Card className={cx('h-full p-0 sm:p-0 md:p-5', isOpen && 'shadow-md')}>
+              {/* Linha compacta (celular) */}
+              <button type="button" onClick={() => setOpen(isOpen ? null : subject.id)} aria-expanded={isOpen}
+                className="flex min-h-16 w-full items-center gap-3 px-4 py-3 text-left md:hidden">
+                <span className="h-9 w-1 shrink-0 rounded-full" style={{ background: subject.color }} aria-hidden />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold">{subject.name}</span>
+                  <Badge tone={st.tone} className="mt-0.5">{st.label}</Badge>
+                </span>
+                <GradeValue value={b.average} tone={st.tone} className="text-2xl" />
+                <ChevronDown className={cx('size-5 shrink-0 text-muted transition-transform duration-300', isOpen && 'rotate-180')} aria-hidden />
+              </button>
+
+              <div className={cx(isOpen ? 'block animate-fade-in' : 'hidden', 'border-t border-line px-4 pb-4 pt-3 md:block md:border-0 md:p-0')}>
               <div className="mb-4 flex items-start justify-between gap-3">
-                <h2 className="flex items-center gap-2 text-lg font-semibold">
+                <h2 className="hidden items-center gap-2 text-lg font-semibold md:flex">
                   <span className="size-3 rounded-full" style={{ background: subject.color }} aria-hidden />{subject.name}
                 </h2>
-                <div className="flex items-center gap-1">
-                  <Badge tone={st.tone}>{st.label}</Badge>
-                  <Button variant="ghost" size="sm" icon={Pencil} onClick={() => onEdit(subject)} aria-label={`Lançar notas de ${subject.name}`}>
-                    <span className="hidden sm:inline">Lançar</span>
+                <div className="flex w-full items-center justify-end gap-1 md:w-auto">
+                  <span className="hidden md:inline-flex"><Badge tone={st.tone}>{st.label}</Badge></span>
+                  <Button variant="secondary" size="sm" icon={Pencil} onClick={() => onEdit(subject)} aria-label={`Lançar notas de ${subject.name}`}
+                    className="w-full md:w-auto md:border-0 md:bg-transparent md:shadow-none">
+                    Lançar notas
                   </Button>
                 </div>
               </div>
@@ -103,8 +120,8 @@ function BimesterView({ data, bimester, onEdit }: { data: ReportCard; bimester: 
               </dl>
 
               <div className="mt-4 flex items-end justify-between gap-3 border-t border-line pt-3">
-                <div className="text-sm text-muted">
-                  <p>Média das provas: <strong className="text-text tabular-nums">{formatGrade(b.examAverage)}</strong> <span className="text-xs">/ 8,0</span></p>
+                <div className="min-w-0 text-sm text-muted">
+                  <p>Média das provas: <strong className="whitespace-nowrap text-text tabular-nums">{formatGrade(b.examAverage)} <span className="text-xs font-normal text-muted">/ 8,0</span></strong></p>
                   {b.status === 'recovery' && <p className="text-warning">Faltaram <strong>{formatNeeded(b.pointsToPass)}</strong> para 6,0</p>}
                   {b.isPartial && b.status !== 'empty' && <p>{b.examsGraded} de 4 provas lançadas</p>}
                 </div>
@@ -118,6 +135,7 @@ function BimesterView({ data, bimester, onEdit }: { data: ReportCard; bimester: 
                   <TriangleAlert className="size-4 shrink-0" aria-hidden />Média das provas abaixo da referência de 4,0.
                 </p>
               )}
+              </div>
             </Card>
           </li>
         );
@@ -131,7 +149,39 @@ function YearView({ data }: { data: ReportCard }) {
   return (
     <div className="space-y-4 animate-fade-up">
       {anyFinal && <Alert tone="danger" title="Atenção">Há matérias em recuperação final. Converse com seus professores.</Alert>}
-      <Card className="overflow-x-auto p-0 sm:p-0">
+      {/* Celular: um cartão por matéria */}
+      <ul className="space-y-2 md:hidden">
+        {data.subjects.map((s) => {
+          const ys = YEAR_STATUS[s.status];
+          return (
+            <li key={s.subject.id}>
+              <Card className="p-3">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <p className="flex min-w-0 items-center gap-2 font-semibold">
+                    <span className="size-2.5 shrink-0 rounded-full" style={{ background: s.subject.color }} aria-hidden />
+                    <span className="truncate">{s.subject.name}</span>
+                  </p>
+                  <Badge tone={ys.tone}>{ys.label}</Badge>
+                </div>
+                <dl className="grid grid-cols-5 gap-1 text-center">
+                  {s.bimesters.map((b, i) => (
+                    <div key={i} className="rounded-md bg-bg py-1.5">
+                      <dt className="text-xs text-muted">{i + 1}º bim.</dt>
+                      <dd><GradeValue value={b.average} tone={BIMESTER_STATUS[b.status].tone} /></dd>
+                    </div>
+                  ))}
+                  <div className="rounded-md bg-primary-soft py-1.5 text-on-primary-soft">
+                    <dt className="text-xs">Soma</dt>
+                    <dd className="font-bold tabular-nums">{formatGrade(s.sum)}</dd>
+                  </div>
+                </dl>
+                {s.status !== 'approved' && s.pointsToPass > 0 && <p className="mt-2 text-sm text-muted">Faltam {formatNeeded(s.pointsToPass)} para 24,0</p>}
+              </Card>
+            </li>
+          );
+        })}
+      </ul>
+      <Card className="hidden overflow-x-auto p-0 sm:p-0 md:block">
         <table className="w-full min-w-[36rem] text-left">
           <caption className="sr-only">Resultado anual por matéria</caption>
           <thead className="border-b border-line text-sm text-muted">

@@ -55,7 +55,7 @@ export default function SummaryPage() {
 
           <BarChart data={data} />
 
-          <div className="grid gap-5 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
             <Card>
               <h2 className="mb-3 flex items-center gap-2 font-semibold"><Trophy className="size-5 text-primary" aria-hidden />Melhores desempenhos</h2>
               <ol className="space-y-2">

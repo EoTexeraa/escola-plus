@@ -50,12 +50,14 @@
   --animate-fade-in: fade-in 250ms var(--ease-out) both;
   --animate-scale-in: scale-in 250ms var(--ease-out) both;
   --animate-slide-in: slide-in 300ms var(--ease-out) both;
+  --animate-sheet-up: sheet-up 320ms var(--ease-out) both;
   --animate-shimmer: shimmer 1.4s linear infinite;
 
   @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
   @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes scale-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
   @keyframes slide-in { from { transform: translateX(-100%); } to { transform: none; } }
+  @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
   @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
   @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-24px, 18px); } }
@@ -122,7 +124,24 @@
     }
   }
 
-  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    /* Toque responde na hora: sem atraso nem zoom de toque duplo (o zoom com dois dedos continua) */
+    touch-action: manipulation;
+    overscroll-behavior-x: none;
+  }
+  /* Janela aberta: a página de fundo não rola junto */
+  html:has(dialog[open]) { overflow: hidden; }
+  /* Teclado aberto no celular: a barra inferior sai do caminho (classe aplicada pelo AppShell) */
+  html.typing .bottom-nav { transform: translateY(110%); }
+  .bottom-nav { transition: transform 200ms var(--ease-out); }
+  .save-bar { bottom: calc(4.75rem + env(safe-area-inset-bottom)); transition: bottom 200ms var(--ease-out); }
+  html.typing .save-bar { bottom: calc(0.5rem + env(safe-area-inset-bottom)); }
+  /* Listas de abas roláveis no celular, sem barra de rolagem visível */
+  .scroll-x { overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .scroll-x::-webkit-scrollbar { display: none; }
+  .scroll-x > * { scroll-snap-align: start; }
   body {
     @apply bg-bg text-text font-sans antialiased;
     min-height: 100dvh;

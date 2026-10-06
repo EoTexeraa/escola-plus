@@ -37,7 +37,25 @@ export default function AuditPage() {
       {isLoading ? <PageSkeleton /> : error || !data ? <ErrorState error={error} onRetry={() => refetch()} /> : data.length === 0 ? (
         <Card><EmptyState icon={History} title="Sem registros" /></Card>
       ) : (
-        <Card className="overflow-x-auto p-0 sm:p-0">
+        <>
+        <ul className="space-y-2 md:hidden">
+          {data.map((r) => {
+            const a = ACTION[r.action] ?? { label: r.action, tone: 'neutral' as Tone };
+            return (
+              <li key={r.id}>
+                <Card className="space-y-1 p-3">
+                  <p className="flex flex-wrap items-center justify-between gap-2">
+                    <Badge tone={a.tone} icon={false}>{a.label}</Badge>
+                    <span className="text-sm tabular-nums text-muted">{new Date(r.createdAt.replace(' ', 'T') + 'Z').toLocaleString('pt-BR')}</span>
+                  </p>
+                  <p className="text-sm">{r.actor ?? '—'}</p>
+                  {r.details && <p className="break-all font-mono text-xs text-muted">{r.details}</p>}
+                </Card>
+              </li>
+            );
+          })}
+        </ul>
+        <Card className="hidden overflow-x-auto p-0 sm:p-0 md:block">
           <table className="w-full min-w-[40rem] text-left text-sm">
             <thead className="border-b border-line bg-bg text-muted">
               <tr>{['Quando', 'Quem', 'Ação', 'Detalhes'].map((h) => <th key={h} scope="col" className="p-3 font-medium">{h}</th>)}</tr>
@@ -57,6 +75,7 @@ export default function AuditPage() {
             </tbody>
           </table>
         </Card>
+        </>
       )}
     </div>
   );

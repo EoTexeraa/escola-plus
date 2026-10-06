@@ -25,7 +25,7 @@ export default function ProfilePage() {
       {me.mustChangePassword && (
         <Alert tone="warning" title="Defina uma nova senha">A administração redefiniu sua senha. Crie uma senha pessoal para continuar usando o app.</Alert>
       )}
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2 [&>*]:min-w-0">
         <div className="space-y-5">
           <Card>
             <div className="flex items-center gap-4">

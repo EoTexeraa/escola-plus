@@ -76,7 +76,7 @@ export default function CalendarPage() {
           <Button icon={Plus} onClick={() => setEditing('new')}>Novo evento</Button>
         </>} />
 
-      <div className="grid gap-5 lg:grid-cols-[1fr_22rem]">
+      <div className="grid gap-5 lg:grid-cols-[1fr_22rem] [&>*]:min-w-0">
         <Card className="p-3 sm:p-5">
           <div className="mb-3 flex items-center justify-between">
             <IconButton label="Mês anterior" icon={ChevronLeft} onClick={() => move(-1)} />
@@ -86,7 +86,7 @@ export default function CalendarPage() {
           <div className="grid grid-cols-7 text-center text-xs font-medium text-muted" aria-hidden>
             {WEEKDAYS_SHORT.map((d) => <div key={d} className="py-2">{d}</div>)}
           </div>
-          <div className="grid grid-cols-7 gap-1" role="group" aria-label="Dias do mês" key={from}>
+          <div className="grid grid-cols-7 gap-0.5 sm:gap-1" role="group" aria-label="Dias do mês" key={from}>
             {days.map((d, i) => {
               const iso = toIsoDay(d);
               const inMonth = d.getMonth() === cursor.getMonth();
@@ -95,7 +95,7 @@ export default function CalendarPage() {
               return (
                 <button key={iso} onClick={() => setSelected(iso)} aria-pressed={isSel}
                   aria-label={`${longDate(iso)}${items.length ? `, ${items.length} item(ns): ${items.map((x) => x.label).join('; ')}` : ''}`}
-                  className={cx('flex aspect-square min-h-11 flex-col items-center justify-start gap-1 rounded-md pt-1.5 text-sm transition-all animate-fade-in',
+                  className={cx('flex h-12 min-w-0 flex-col items-center justify-start gap-1 rounded-md pt-1.5 text-sm transition-all animate-fade-in sm:aspect-square sm:h-auto sm:min-h-11',
                     inMonth ? 'font-medium' : 'text-muted font-normal text-xs', isSel ? 'bg-primary text-on-primary shadow-md scale-105' : 'hover:bg-primary-soft',
                     iso === today && !isSel && 'ring-2 ring-primary font-bold')}
                   style={{ animationDelay: `${i * 6}ms` }}>

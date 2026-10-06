@@ -88,7 +88,7 @@ export default function UsersPage() {
                     {u.role === 'student' && (
                       <select aria-label={`Turma de ${u.fullName}`} value={u.classId ?? ''}
                         onChange={(e) => patch.mutate({ id: u.id, body: { classId: e.target.value ? Number(e.target.value) : null } })}
-                        className="min-h-11 rounded-md border border-control bg-surface px-2 text-sm">
+                        className="min-h-11 rounded-md border border-control bg-surface px-2 text-base">
                         <option value="">Sem turma</option>
                         {classes.data?.map((c) => <option key={c.id} value={c.id}>{c.name} ({c.schoolYear})</option>)}
                       </select>
@@ -96,7 +96,7 @@ export default function UsersPage() {
                     {u.role === 'student' && (
                       <select aria-label={`Nível de inglês de ${u.fullName}`} value={u.englishLevel ?? ''}
                         onChange={(e) => patch.mutate({ id: u.id, body: { englishLevel: Number(e.target.value) } })}
-                        className="min-h-11 rounded-md border border-control bg-surface px-2 text-sm">
+                        className="min-h-11 rounded-md border border-control bg-surface px-2 text-base">
                         {u.englishLevel === null && <option value="">Inglês ?</option>}
                         {[2, 3, 4].map((lv) => <option key={lv} value={lv}>Inglês {lv}</option>)}
                       </select>

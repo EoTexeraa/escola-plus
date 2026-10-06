@@ -194,7 +194,7 @@ function StudentHome({ name }: { name: string }) {
             <ul className="space-y-2">
               {data.latestAnnouncements.map((a) => (
                 <li key={a.id}>
-                  <Link to="/avisos" className="flex items-center gap-3 rounded-md p-2 hover:bg-bg">
+                  <Link to="/avisos" className="flex min-h-11 items-center gap-3 rounded-md p-2 hover:bg-bg">
                     {a.isPinned ? <Pin className="size-4 shrink-0 text-primary" aria-label="Fixado" /> : <span className={cx('size-2.5 shrink-0 rounded-full', a.read ? 'bg-line' : 'bg-primary')} aria-label={a.read ? 'Lido' : 'Não lido'} />}
                     <span className={cx('min-w-0 flex-1 truncate', !a.read && 'font-semibold')}>{a.title}</span>
                     <Badge tone={ANNOUNCEMENT_CATEGORY[a.category]?.tone} icon={false}>{ANNOUNCEMENT_CATEGORY[a.category]?.label}</Badge>

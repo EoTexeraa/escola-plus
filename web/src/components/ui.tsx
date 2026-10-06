@@ -137,7 +137,7 @@ export function PageHeader({ title, subtitle, actions }: { title: string; subtit
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{title}</h1>
         {subtitle && <p className="mt-1 text-muted">{subtitle}</p>}
       </div>
-      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+      {actions && <div className="flex w-full flex-wrap gap-2 sm:w-auto [&>*]:flex-1 sm:[&>*]:flex-none">{actions}</div>}
     </header>
   );
 }
@@ -257,15 +257,27 @@ export function Modal({ open, onClose, title, children, footer }: {
       ref={ref}
       onClose={onClose}
       onClick={(e) => { if (e.target === ref.current) onClose(); }}
-      className="m-auto w-[min(100vw-2rem,32rem)] max-h-[90dvh] rounded-xl bg-surface p-0 text-text shadow-lg backdrop:bg-black/50 open:animate-scale-in"
+      // Celular: "folha" que sobe de baixo, largura total, botões ao alcance do polegar.
+      // Telas maiores: janela centralizada.
+      className={cx(
+        'bg-surface p-0 text-text shadow-lg backdrop:bg-black/50 open:flex open:flex-col',
+        'mx-0 mb-0 mt-auto w-full max-w-none max-h-[92dvh] rounded-t-2xl open:animate-sheet-up',
+        'sm:m-auto sm:w-[min(100vw-2rem,32rem)] sm:max-h-[90dvh] sm:rounded-xl sm:open:animate-scale-in',
+      )}
       aria-labelledby="modal-title"
     >
-      <div className="flex items-center justify-between border-b border-line px-5 py-3">
+      <div className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-line sm:hidden" aria-hidden />
+      <div className="flex shrink-0 items-center justify-between border-b border-line px-4 py-2 sm:px-5 sm:py-3">
         <h2 id="modal-title" className="text-lg font-semibold">{title}</h2>
         <IconButton label="Fechar" icon={X} onClick={onClose} />
       </div>
-      <div className="max-h-[65dvh] overflow-y-auto px-5 py-4">{children}</div>
-      {footer && <div className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</div>}
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-5">{children}</div>
+      {footer && (
+        <div className="flex shrink-0 gap-2 border-t border-line px-4 pt-3 sm:justify-end sm:px-5 sm:pb-3 [&>*]:flex-1 sm:[&>*]:flex-none"
+          style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+          {footer}
+        </div>
+      )}
     </dialog>
   );
 }
